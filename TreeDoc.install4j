@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="10.0.8" transformSequenceNumber="10">
   <directoryPresets config="./Images/Icons" />
-  <application name="Tree Documentor" applicationId="4497-8992-4017-3453" mediaDir="../../../Distribution/java17/b6TreeDoc" lzmaCompression="true" shortName="TreeDoc" publisher="David Garratt" publisherWeb="https://www.commander4j.com" version="1.01" allPathsRelative="true" macVolumeId="6b86ee16dd00bf3f">
+  <application name="Tree Documentor" applicationId="4497-8992-4017-3453" mediaDir="../../../Distribution/java17/b6TreeDoc" lzmaCompression="true" shortName="TreeDoc" publisher="David Garratt" publisherWeb="https://www.commander4j.com" version="1.02" allPathsRelative="true" macVolumeId="6b86ee16dd00bf3f">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="cs" />
@@ -519,8 +519,12 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="26" architecture="64" />
-    <macosFolder name="macOS Folder" id="28" architecture="universal" />
-    <unixInstaller name="Unix Installer" id="29" />
+    <windows name="Windows x64" id="26" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_${compiler:sys.platform}${compiler:sys.withJre}" customInstallBaseDir="C:\" architecture="64" />
+    <windows name="Windows arm64" id="36" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_${compiler:sys.platform}${compiler:sys.withJre}" customInstallBaseDir="C:\" architecture="arm64" />
+    <macosFolder name="macOS Folder Intel" id="28" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_intel_mac${compiler:sys.withJre}" />
+    <macosFolder name="macOS Folder Silicon" id="41" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_silicon_mac${compiler:sys.withJre}" architecture="aarch64" />
+    <unixInstaller name="Linux Installer" id="29" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_linux${compiler:sys.withJre}">
+      <jreBundle jreBundleSource="none" />
+    </unixInstaller>
   </mediaSets>
 </install4j>

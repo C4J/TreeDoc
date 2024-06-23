@@ -10,9 +10,17 @@
     <property name="source" value="17"/>
     <path id="b6TreeDoc.classpath">
         <pathelement location="bin"/>
+        <pathelement location="lib/log4j-api-2.20.0.jar"/>
+        <pathelement location="lib/log4j-core-2.20.0.jar"/>
+        <pathelement location="lib/log4j-jcl-2.20.0.jar"/>
+        <pathelement location="lib/commons-io-2.13.0.jar"/>
     </path>
     <path id="run.TreeDoc.classpath">
         <path refid="b6TreeDoc.classpath"/>
+        <pathelement location="lib/log4j-api-2.20.0.jar"/>
+        <pathelement location="lib/log4j-core-2.20.0.jar"/>
+        <pathelement location="lib/log4j-jcl-2.20.0.jar"/>
+        <pathelement location="lib/commons-io-2.13.0.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>

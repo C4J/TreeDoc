@@ -86,7 +86,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 		return iter;
 	}
 
-	public static TreeNode<File> createDirTree(File folder)
+	public static TreeNode<File> createDirTree(File folder, boolean includeFiles, String filter, LinkedList<String> excludeFolders, LinkedList<String> excludeFiles)
 	{
 		if (!folder.isDirectory())
 		{
@@ -110,6 +110,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 					String fileType = "";
 
 					Path path = Paths.get(file.getAbsolutePath());
+					//System.out.println(path.getFileName());
 
 					try
 					{
@@ -123,6 +124,11 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							else
 							{
 								fileType = "Directory";
+
+								if (excludeFolders.contains(path.getFileName().toString()))
+								{
+									fileType = "Ignore Folder";
+								}
 							}
 						}
 						else
@@ -130,6 +136,11 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							if (Files.isRegularFile(path))
 							{
 								fileType = "Regular File";
+								
+								if (excludeFiles.contains(path.getFileName().toString()))
+								{
+									fileType = "Ignore File";
+								}
 							}
 							else
 							{
@@ -158,7 +169,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 					if (fileType.equals("Directory"))
 					{
 
-						appendDirTree(file, DirRoot);
+						appendDirTree(file, DirRoot, includeFiles, filter, excludeFolders,excludeFiles);
 
 					}
 				}
@@ -175,13 +186,13 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 		Path infoPlistPath = contentsPath.resolve("Info.plist");
 
 		Path wrapperPath = path.resolve("Wrapper");
-		
+
 		Path parallesPath = path.resolve("config.pvs");
 
-		return (Files.exists(contentsPath) && Files.exists(infoPlistPath)) || Files.exists(wrapperPath)|| Files.exists(parallesPath);
+		return (Files.exists(contentsPath) && Files.exists(infoPlistPath)) || Files.exists(wrapperPath) || Files.exists(parallesPath);
 	}
 
-	public static void appendDirTree(File folder, TreeNode<File> DirRoot)
+	public static void appendDirTree(File folder, TreeNode<File> DirRoot, boolean includeFiles, String filter, LinkedList<String> excludeFolders, LinkedList<String> excludeFiles)
 	{
 		DirRoot.addChild(folder);
 
@@ -197,7 +208,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 
 				for (File file : filenames)
 				{
-					if (file.isDirectory())
+					if (file.isDirectory() || (file.isFile() && includeFiles))
 					{
 						Path p = file.toPath();
 						if (isAppBundle(p) == false)
@@ -206,7 +217,15 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							{
 								if (Files.isHidden(p) == false)
 								{
-									appendDirTree(file, DirRoot.children.get(DirRoot.children.size() - 1));
+									if ((file.isDirectory() && (excludeFolders.contains(p.getFileName().toString())==false)) || (file.isFile() && file.getAbsoluteFile().toString().toLowerCase().contains(filter.toLowerCase()))  && (excludeFiles.contains(p.getFileName().toString())==false))
+									{
+
+									//	if (excludes.contains(p.getFileName().toString()))
+										{
+											appendDirTree(file, DirRoot.children.get(DirRoot.children.size() - 1), includeFiles, filter, excludeFolders,excludeFiles);
+										}
+
+									}
 								}
 							}
 							catch (IOException e)
@@ -283,9 +302,33 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 		}
 	}
 
-	public static String displayTree(File file)
+	public static String displayTree(File file, boolean includeFiles, String filter, String textFolderExcludes,String textFileExcludes)
 	{
-		TreeNode<File> DirTree = createDirTree(file);
+		LinkedList<String> excludedFolders = new LinkedList<String>();
+
+		String[] temp = textFolderExcludes.split("\n");
+
+		for (int x = 0; x < temp.length; x++)
+		{
+			if (temp[x].equals("") == false)
+			{
+				excludedFolders.add(temp[x]);
+			}
+		}
+		
+		LinkedList<String> excludedFiles = new LinkedList<String>();
+
+		temp = textFileExcludes.split("\n");
+
+		for (int x = 0; x < temp.length; x++)
+		{
+			if (temp[x].equals("") == false)
+			{
+				excludedFiles.add(temp[x]);
+			}
+		}
+
+		TreeNode<File> DirTree = createDirTree(file, includeFiles, filter, excludedFolders,excludedFiles);
 		String result = renderDirectoryTree(DirTree);
 		return result;
 	}

@@ -11,7 +11,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -48,7 +51,7 @@ public class TreeDoc extends JFrame
 	private Font boldFont = new Font("Courier New", Font.BOLD, 12);
 	private JCheckBox includeFiles = new JCheckBox("Include Files");
 	private File rootFolder;
-	private String version = "1.10";
+	private String version = "1.11";
 	private JTextField textFilter;
 	private JTextArea textExcludeFolders = new JTextArea();
 	private JTextArea textExcludeFiles = new JTextArea();
@@ -281,7 +284,30 @@ public class TreeDoc extends JFrame
 		if (result)
 		{
 			rootFolder = xmlMessage.findXPath("//TreeDoc/rootFolder").trim();
+			
+			Path temp = Paths.get(rootFolder);
+			boolean valid = Files.exists(temp);
+			
+			if (valid)
+			{
+				valid = org.apache.commons.io.FileUtils.isDirectory(new File(rootFolder), LinkOption.NOFOLLOW_LINKS);
+			}
 
+			if (valid == false)
+			{
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				int option = fileChooser.showOpenDialog(TreeDoc.this);
+				
+				if (option == JFileChooser.APPROVE_OPTION)
+				{
+					rootFolder = fileChooser.getSelectedFile().getAbsolutePath();
+				}
+				else
+				{
+					System.exit(0);
+				}
+			}
 			
 			includeFilesStr = xmlMessage.findXPath("//TreeDoc/includeFiles").trim().toUpperCase();
 

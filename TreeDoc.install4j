@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="10.0.8" transformSequenceNumber="10">
   <directoryPresets config="." />
-  <application name="Tree Documentor" applicationId="4497-8992-4017-3453" mediaDir="../../../Distribution/java17/b6TreeDoc" lzmaCompression="true" shortName="TreeDoc" publisher="David Garratt" publisherWeb="https://www.commander4j.com" version="1.10" allPathsRelative="true" macVolumeId="6b86ee16dd00bf3f">
+  <application name="Tree Documentor" applicationId="4497-8992-4017-3453" mediaDir="../../../Distribution/java17/b6TreeDoc" lzmaCompression="true" shortName="TreeDoc" publisher="David Garratt" publisherWeb="https://www.commander4j.com" version="1.11" allPathsRelative="true" macVolumeId="6b86ee16dd00bf3f">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="cs" />
@@ -21,14 +21,13 @@
   </application>
   <files defaultOverwriteMode="1" defaultUninstallMode="2">
     <mountPoints>
-      <mountPoint id="24" />
       <mountPoint id="42" location="lib" />
       <mountPoint id="43" location="xml" />
       <mountPoint id="44" location="xml/config" />
       <mountPoint id="45" location="Images" />
+      <mountPoint id="24" />
     </mountPoints>
     <entries>
-      <fileEntry mountPoint="24" file="./Tree.jar" />
       <dirEntry mountPoint="42" file="./lib" overwriteMode="1" uninstallMode="2" overrideOverwriteMode="true" overrideUninstallMode="true" subDirectory="lib" />
       <dirEntry mountPoint="44" file="./xml/config" overwriteMode="0" uninstallMode="1" overrideOverwriteMode="true" overrideUninstallMode="true" subDirectory="config" />
       <dirEntry mountPoint="45" file="./Images" overwriteMode="1" uninstallMode="2" overrideOverwriteMode="true" overrideUninstallMode="true" subDirectory="Images">
@@ -36,6 +35,7 @@
           <entry location=".DS_Store" />
         </exclude>
       </dirEntry>
+      <fileEntry mountPoint="24" file="./Tree.jar" />
     </entries>
   </files>
   <launchers>
@@ -202,6 +202,7 @@ return console.askOkCancel(message, true);
           </screen>
           <screen id="15" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true" rollbackBarrierExitCode="0">
             <actions>
+              <action id="46" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" actionElevationType="none" rollbackBarrierExitCode="0" />
               <action id="17" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
               <action id="18" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
                 <serializedBean>

@@ -17,7 +17,7 @@
         <language id="es" />
       </additionalLanguages>
     </languages>
-    <jreBundles jdkProviderId="Zulu" release="17/latest" />
+    <jreBundles jdkProviderId="Zulu" release="17/17.0.12" />
   </application>
   <files defaultOverwriteMode="1" defaultUninstallMode="2">
     <mountPoints>
@@ -533,8 +533,8 @@ return console.askYesNo(message, true);
   <mediaSets>
     <windows name="Windows x64" id="26" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_${compiler:sys.platform}${compiler:sys.withJre}" customInstallBaseDir="C:\" architecture="64" />
     <windows name="Windows arm64" id="36" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_${compiler:sys.platform}${compiler:sys.withJre}" customInstallBaseDir="C:\" architecture="arm64" />
-    <macosFolder name="macOS Folder Intel" id="28" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_intel_mac${compiler:sys.withJre}" />
-    <macosFolder name="macOS Folder Silicon" id="41" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_silicon_mac${compiler:sys.withJre}" architecture="aarch64" />
+    <macosFolder name="macOS Folder Intel" id="28" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_apple_intel${compiler:sys.withJre}" />
+    <macosFolder name="macOS Folder Silicon" id="41" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_apple_silicon${compiler:sys.withJre}" architecture="aarch64" />
     <unixInstaller name="Linux Installer" id="29" mediaFileName="${compiler:sys.shortName}_${compiler:sys.version}_linux${compiler:sys.withJre}">
       <jreBundle jreBundleSource="none" />
     </unixInstaller>

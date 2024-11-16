@@ -8,9 +8,12 @@ import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -26,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -39,8 +43,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import javax.swing.JTextField;
-
 public class TreeDoc extends JFrame
 {
 
@@ -51,7 +53,7 @@ public class TreeDoc extends JFrame
 	private Font boldFont = new Font("Courier New", Font.BOLD, 12);
 	private JCheckBox includeFiles = new JCheckBox("Include Files");
 	private File rootFolder;
-	private String version = "1.11";
+	private String version = "1.50";
 	private JTextField textFilter;
 	private JTextArea textExcludeFolders = new JTextArea();
 	private JTextArea textExcludeFiles = new JTextArea();
@@ -61,15 +63,15 @@ public class TreeDoc extends JFrame
 	{
 
 		TreeDoc frame = new TreeDoc();
-		
+
 		GraphicsDevice gd = JUtility.getGraphicsDevice();
-		
+
 		GraphicsConfiguration gc = gd.getDefaultConfiguration();
 
 		Rectangle screenBounds = gc.getBounds();
 
 		frame.setBounds(screenBounds.x + ((screenBounds.width - frame.getWidth()) / 2), screenBounds.y + ((screenBounds.height - frame.getHeight()) / 2), frame.getWidth(), frame.getHeight());
-		
+
 		frame.setVisible(true);
 	}
 
@@ -85,7 +87,7 @@ public class TreeDoc extends JFrame
 		}
 
 		setFont(defaultFont);
-		setTitle("Tree Documentor"+ " "+version);
+		setTitle("Tree Documentor" + " " + version);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 572);
@@ -123,12 +125,12 @@ public class TreeDoc extends JFrame
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int option = fileChooser.showOpenDialog(TreeDoc.this);
-				
+
 				if (option == JFileChooser.APPROVE_OPTION)
 				{
 					rootFolder = fileChooser.getSelectedFile();
 					textField_RootFolder.setText(rootFolder.getAbsolutePath());
-					textArea.setText(TreeNode.displayTree(rootFolder,includeFiles.isSelected(),textFilter.getText(),textExcludeFolders.getText(),textExcludeFiles.getText()));
+					textArea.setText(TreeNode.displayTree(rootFolder, includeFiles.isSelected(), textFilter.getText(), textExcludeFolders.getText(), textExcludeFiles.getText()));
 					textArea.setCaretPosition(0);
 				}
 
@@ -153,11 +155,11 @@ public class TreeDoc extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				JFileChooser jFileChooser = new JFileChooser();
-				
+
 				jFileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-				
+
 				jFileChooser.setSelectedFile(new File("tree.txt"));
-				
+
 				int returnVal = jFileChooser.showSaveDialog(TreeDoc.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION)
@@ -166,26 +168,30 @@ public class TreeDoc extends JFrame
 					{
 						File newTextFile = new File(jFileChooser.getSelectedFile().getAbsolutePath());
 
-						FileWriter fw = new FileWriter(newTextFile);
-						fw.write(textArea.getText());
-						fw.close();
+						FileOutputStream fos = new FileOutputStream(newTextFile);
+						OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+						BufferedWriter writer = new BufferedWriter(osw);
 
+						writer.write(textArea.getText());
+						writer.flush();
+						writer.close();
 					}
 					catch (IOException iox)
 					{
 						iox.printStackTrace();
 					}
 				}
-
 			}
 		});
 		btnSave.setFont(boldFont);
 		btnSave.setBounds(278, 10, 131, 25);
 		desktopPane.add(btnSave);
-		
+
 		JButton btnQuit = new JButton("Quit");
-		btnQuit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnQuit.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				saveConfig();
 				System.exit(0);
 			}
@@ -193,10 +199,12 @@ public class TreeDoc extends JFrame
 		btnQuit.setFont(boldFont);
 		btnQuit.setBounds(543, 10, 131, 25);
 		desktopPane.add(btnQuit);
-		
+
 		JButton btnClearOutput = new JButton("Clear Output");
-		btnClearOutput.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnClearOutput.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				textArea.setText("");
 			}
 		});
@@ -205,89 +213,91 @@ public class TreeDoc extends JFrame
 		desktopPane.add(btnClearOutput);
 		includeFiles.setSelected(true);
 		includeFiles.setBackground(UIManager.getColor("Button.highlight"));
-		
+
 		includeFiles.setBounds(692, 9, 117, 23);
 		desktopPane.add(includeFiles);
-		
+
 		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnRefresh.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				if (rootFolder != null)
 				{
-					textArea.setText(TreeNode.displayTree(rootFolder,includeFiles.isSelected(),textFilter.getText(),textExcludeFolders.getText(),textExcludeFiles.getText()));
+					textArea.setText(TreeNode.displayTree(rootFolder, includeFiles.isSelected(), textFilter.getText(), textExcludeFolders.getText(), textExcludeFiles.getText()));
 					textArea.setCaretPosition(0);
 				}
 			}
 		});
 		btnRefresh.setBounds(145, 10, 131, 25);
 		desktopPane.add(btnRefresh);
-		
+
 		JLabel lblRootFolder = new JLabel("Root Folder :");
 		lblRootFolder.setHorizontalAlignment(SwingConstants.TRAILING);
 		lblRootFolder.setBounds(12, 50, 103, 15);
 		desktopPane.add(lblRootFolder);
-		
+
 		textFilter = new JTextField();
 		textFilter.setBounds(684, 45, 84, 25);
 		desktopPane.add(textFilter);
 		textFilter.setColumns(10);
-		
+
 		JLabel lblFilter = new JLabel("Include File Ext");
 		lblFilter.setBounds(771, 45, 102, 25);
 		desktopPane.add(lblFilter);
-		
+
 		JScrollPane scrollPane_ExcludeFolders = new JScrollPane();
 		scrollPane_ExcludeFolders.setBounds(684, 100, 204, 202);
 		desktopPane.add(scrollPane_ExcludeFolders);
-		
+
 		textExcludeFolders.setLocation(681, 0);
 		scrollPane_ExcludeFolders.setViewportView(textExcludeFolders);
-		
+
 		JLabel lblExcludeFolders = new JLabel("Exclude Folders");
 		lblExcludeFolders.setBounds(684, 77, 204, 25);
 		desktopPane.add(lblExcludeFolders);
-		
+
 		JLabel lblExcludeFiles = new JLabel("Exclude Files");
 		lblExcludeFiles.setBounds(684, 310, 204, 25);
 		desktopPane.add(lblExcludeFiles);
-		
+
 		JScrollPane scrollPane_ExcludeFiles = new JScrollPane();
 		scrollPane_ExcludeFiles.setBounds(684, 332, 204, 202);
 		desktopPane.add(scrollPane_ExcludeFiles);
-		
+
 		scrollPane_ExcludeFiles.setViewportView(textExcludeFiles);
-		
+
 		loadConfig();
-		
+
 		rootFolder = new File(textField_RootFolder.getText());
-		if (rootFolder.exists()==false)
+		if (rootFolder.exists() == false)
 		{
-			
+
 		}
-		
-		textArea.setText(TreeNode.displayTree(rootFolder,includeFiles.isSelected(),textFilter.getText(),textExcludeFolders.getText(),textExcludeFiles.getText()));
-		textArea.setCaretPosition(0);	
+
+		textArea.setText(TreeNode.displayTree(rootFolder, includeFiles.isSelected(), textFilter.getText(), textExcludeFolders.getText(), textExcludeFiles.getText()));
+		textArea.setCaretPosition(0);
 	}
-		
+
 	private void loadConfig()
 	{
-		
+
 		JXMLDocument xmlMessage = new JXMLDocument();
 		String rootFolder = System.getProperty("user.dir");
 		String includeFilesStr = "N";
 		String fileExtension = "";
-		String folders="";
-		String files="";
-		
+		String folders = "";
+		String files = "";
+
 		boolean result = xmlMessage.setDocument("." + File.separator + "xml" + File.separator + "config" + File.separator + "config.xml");
-		
+
 		if (result)
 		{
 			rootFolder = xmlMessage.findXPath("//TreeDoc/rootFolder").trim();
-			
+
 			Path temp = Paths.get(rootFolder);
 			boolean valid = Files.exists(temp);
-			
+
 			if (valid)
 			{
 				valid = org.apache.commons.io.FileUtils.isDirectory(new File(rootFolder), LinkOption.NOFOLLOW_LINKS);
@@ -298,7 +308,7 @@ public class TreeDoc extends JFrame
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				int option = fileChooser.showOpenDialog(TreeDoc.this);
-				
+
 				if (option == JFileChooser.APPROVE_OPTION)
 				{
 					rootFolder = fileChooser.getSelectedFile().getAbsolutePath();
@@ -308,71 +318,68 @@ public class TreeDoc extends JFrame
 					System.exit(0);
 				}
 			}
-			
+
 			includeFilesStr = xmlMessage.findXPath("//TreeDoc/includeFiles").trim().toUpperCase();
 
-			
 			fileExtension = xmlMessage.findXPath("//TreeDoc/fileExtension").trim();
-			
 
 			boolean more = true;
 			int occur = 1;
-			
+
 			while (more)
 			{
 				String folder = xmlMessage.findXPath("//TreeDoc/excludeFolders/folder[" + occur + "]");
 				if (folder.isBlank())
 				{
-					more=false;
+					more = false;
 				}
 				else
 				{
-					folders = folders+folder+"\n";
+					folders = folders + folder + "\n";
 				}
 				occur++;
 			}
-			
 
 			more = true;
 			occur = 1;
-			
+
 			while (more)
 			{
 				String file = xmlMessage.findXPath("//TreeDoc/excludeFiles/file[" + occur + "]");
 				if (file.isBlank())
 				{
-					more=false;
+					more = false;
 				}
 				else
 				{
-					files = files+file+"\n";
+					files = files + file + "\n";
 				}
 				occur++;
 			}
-		
+
 		}
 		else
 		{
 			logger.error("Cannot read config.xml");
 		}
-		
+
 		if (rootFolder.isBlank())
 		{
 			rootFolder = System.getProperty("user.home");
 		}
-		
-		if (org.apache.commons.io.FileUtils.isDirectory(new File(rootFolder), LinkOption.NOFOLLOW_LINKS)==false)
+
+		if (org.apache.commons.io.FileUtils.isDirectory(new File(rootFolder), LinkOption.NOFOLLOW_LINKS) == false)
 		{
 			rootFolder = System.getProperty("user.home");
 		}
-		
+
 		textField_RootFolder.setText(rootFolder);
-		
+
 		if (includeFilesStr.isBlank())
 		{
 			includeFilesStr = "N";
 		}
-		
+
 		if (includeFilesStr.equals("Y"))
 		{
 			includeFiles.setSelected(true);
@@ -381,33 +388,33 @@ public class TreeDoc extends JFrame
 		{
 			includeFiles.setSelected(false);
 		}
-		
+
 		textFilter.setText(fileExtension);
-		
+
 		textExcludeFolders.setText(folders);
-		
+
 		textExcludeFiles.setText(files);
 	}
-	
+
 	private void saveConfig()
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		
+
 		final JFileIO fio = new JFileIO();
-		
+
 		try
 		{
 			DocumentBuilder builder = factory.newDocumentBuilder();
 
 			Document document = builder.newDocument();
-			
+
 			Element TreeDoc = (Element) document.createElement("TreeDoc");
-			
+
 			Element rootFolder = (Element) document.createElement("rootFolder");
 			Text text = document.createTextNode(textField_RootFolder.getText());
 			rootFolder.appendChild(text);
 			TreeDoc.appendChild(rootFolder);
-			
+
 			Element includeFilesStr = (Element) document.createElement("includeFiles");
 			if (includeFiles.isSelected())
 			{
@@ -419,17 +426,17 @@ public class TreeDoc extends JFrame
 			}
 			includeFilesStr.appendChild(text);
 			TreeDoc.appendChild(includeFilesStr);
-			
+
 			Element fileExtension = (Element) document.createElement("fileExtension");
 			text = document.createTextNode(textFilter.getText());
 			fileExtension.appendChild(text);
 			TreeDoc.appendChild(fileExtension);
-			
+
 			String[] foldersString = textExcludeFolders.getText().split("\n");
-			
+
 			Element excludeFolders = (Element) document.createElement("excludeFolders");
-			
-			for (int x=0;x<foldersString.length;x++)
+
+			for (int x = 0; x < foldersString.length; x++)
 			{
 				Element excludeFolder = (Element) document.createElement("folder");
 				text = document.createTextNode(foldersString[x]);
@@ -437,25 +444,23 @@ public class TreeDoc extends JFrame
 				excludeFolders.appendChild(excludeFolder);
 			}
 			TreeDoc.appendChild(excludeFolders);
-			
-			
-			
+
 			String[] filesString = textExcludeFiles.getText().split("\n");
-			
+
 			Element excludeFiles = (Element) document.createElement("excludeFiles");
-			
-			for (int x=0;x<filesString.length;x++)
+
+			for (int x = 0; x < filesString.length; x++)
 			{
 				Element excludeFile = (Element) document.createElement("file");
 				text = document.createTextNode(filesString[x]);
 				excludeFile.appendChild(text);
 				excludeFiles.appendChild(excludeFile);
 			}
-			
+
 			TreeDoc.appendChild(excludeFiles);
-			
+
 			document.appendChild(TreeDoc);
-			
+
 			fio.writeToDisk("." + File.separator + "xml" + File.separator + "config" + File.separator + "config.xml", document);
 		}
 		catch (ParserConfigurationException pce)
@@ -468,6 +473,6 @@ public class TreeDoc extends JFrame
 		{
 			logger.error("Cannot write config.xml to file");
 		}
-		
+
 	}
 }

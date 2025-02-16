@@ -166,7 +166,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 						fileType = e.getMessage();
 					}
 
-					if (fileType.equals("Directory"))
+					if (fileType.equals("Directory") || fileType.equals("Regular File"))
 					{
 
 						appendDirTree(file, DirRoot, includeFiles, filter, excludeFolders,excludeFiles);

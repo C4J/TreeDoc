@@ -224,6 +224,7 @@ public class TreeDoc extends JFrame
 			{
 				if (rootFolder != null)
 				{
+					textArea.setText("");
 					textArea.setText(TreeNode.displayTree(rootFolder, includeFiles.isSelected(), textFilter.getText(), textExcludeFolders.getText(), textExcludeFiles.getText()));
 					textArea.setCaretPosition(0);
 				}

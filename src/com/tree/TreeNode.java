@@ -137,10 +137,21 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							{
 								fileType = "Regular File";
 								
-								if (excludeFiles.contains(path.getFileName().toString()))
+								if (excludeFiles.size() > 0)
 								{
-									fileType = "Ignore File";
+									for (int x=0;x<excludeFiles.size();x++)
+									{
+										System.out.println(path.getFileName().toString()+" - "+excludeFiles.get(x));
+										if (path.getFileName().toString().endsWith(excludeFiles.get(x)))
+										{
+											fileType = "Ignore File";
+											
+											break;
+										}
+									}
 								}
+								System.out.println(fileType);
+								
 							}
 							else
 							{
@@ -217,7 +228,40 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							{
 								if (Files.isHidden(p) == false)
 								{
-									if ((file.isDirectory() && (excludeFolders.contains(p.getFileName().toString())==false)) || (file.isFile() && file.getAbsoluteFile().toString().toLowerCase().contains(filter.toLowerCase()))  && (excludeFiles.contains(p.getFileName().toString())==false))
+									boolean fileValid = true;
+									
+									if (file.isFile())
+									{
+										if (excludeFiles.size()>0)
+										{
+											for (int x=0;x<excludeFiles.size();x++)
+											{
+												if (file.getName().endsWith(excludeFiles.get(x)))
+												{
+													fileValid = false;
+												}
+											}
+										}
+									}
+									
+									boolean folderValid = true;
+									
+									if (file.isDirectory())
+									{
+										if (excludeFolders.size()>0)
+										{
+											for (int x=0;x<excludeFolders.size();x++)
+											{
+												if (file.getName().endsWith(excludeFiles.get(x)))
+												{
+													folderValid = false;
+												}
+											}									
+										}
+									}
+									
+									if ((folderValid) && (fileValid))
+									//if ((file.isDirectory() && (excludeFolders.contains(p.getFileName().toString())==false)) || (file.isFile() && file.getAbsoluteFile().toString().toLowerCase().contains(filter.toLowerCase()))  && (excludeFiles.contains(p.getFileName().toString())==false))
 									{
 
 									//	if (excludes.contains(p.getFileName().toString()))

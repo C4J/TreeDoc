@@ -110,7 +110,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 					String fileType = "";
 
 					Path path = Paths.get(file.getAbsolutePath());
-					//System.out.println(path.getFileName());
+					//System.out.println(">>>>>>"+path.getFileName());
 
 					try
 					{
@@ -124,10 +124,19 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 							else
 							{
 								fileType = "Directory";
-
-								if (excludeFolders.contains(path.getFileName().toString()))
+								
+								if (excludeFolders.size() > 0)
 								{
-									fileType = "Ignore Folder";
+									for (int x=0;x<excludeFolders.size();x++)
+									{
+										//System.out.println(path.getFileName().toString()+" - "+excludeFolders.get(x));
+										if (path.getFileName().toString().endsWith(excludeFolders.get(x)))
+										{
+											fileType = "Ignore Folder";
+											
+											break;
+										}
+									}
 								}
 							}
 						}
@@ -141,7 +150,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 								{
 									for (int x=0;x<excludeFiles.size();x++)
 									{
-										System.out.println(path.getFileName().toString()+" - "+excludeFiles.get(x));
+										//System.out.println(path.getFileName().toString()+" - "+excludeFiles.get(x));
 										if (path.getFileName().toString().endsWith(excludeFiles.get(x)))
 										{
 											fileType = "Ignore File";
@@ -150,7 +159,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 										}
 									}
 								}
-								System.out.println(fileType);
+								//System.out.println(fileType);
 								
 							}
 							else
@@ -252,7 +261,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>>
 										{
 											for (int x=0;x<excludeFolders.size();x++)
 											{
-												if (file.getName().endsWith(excludeFiles.get(x)))
+												if (file.getName().endsWith(excludeFolders.get(x)))
 												{
 													folderValid = false;
 												}

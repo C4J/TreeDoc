@@ -53,7 +53,7 @@ public class TreeDoc extends JFrame
 	private Font boldFont = new Font("Courier New", Font.BOLD, 12);
 	private JCheckBox includeFiles = new JCheckBox("Include Files");
 	private File rootFolder;
-	private String version = "1.70";
+	private String version = "1.80";
 	private JTextField textFilter;
 	private JTextArea textExcludeFolders = new JTextArea();
 	private JTextArea textExcludeFiles = new JTextArea();

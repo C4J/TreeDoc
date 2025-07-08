@@ -38,7 +38,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.impl.Log4jContextFactory;
+import org.apache.logging.log4j.core.util.DefaultShutdownCallbackRegistry;
+import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -53,15 +58,20 @@ public class TreeDoc extends JFrame
 	private Font boldFont = new Font("Courier New", Font.BOLD, 12);
 	private JCheckBox includeFiles = new JCheckBox("Include Files");
 	private File rootFolder;
-	private String version = "1.80";
+	private String version = "1.82";
 	private JTextField textFilter;
 	private JTextArea textExcludeFolders = new JTextArea();
 	private JTextArea textExcludeFiles = new JTextArea();
-	final Logger logger = org.apache.logging.log4j.LogManager.getLogger(TreeDoc.class);
+	public static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TreeDoc.class);
+	public static LoggerContextFactory factory = LogManager.getFactory();
 
 	public static void main(String[] args)
 	{
 
+		TreeDoc.initLogging("");
+
+		logger.info("sftpGet Starting");
+		
 		TreeDoc frame = new TreeDoc();
 
 		GraphicsDevice gd = JUtility.getGraphicsDevice();
@@ -473,6 +483,28 @@ public class TreeDoc extends JFrame
 		catch (Exception ex)
 		{
 			logger.error("Cannot write config.xml to file");
+		}
+
+	}
+	
+	public static void initLogging(String filename)
+	{
+		if (filename.isEmpty())
+		{
+			filename = System.getProperty("user.dir") + File.separator + "xml" + File.separator + "config" + File.separator + "log4j2.xml";
+		}
+
+		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+		File file = new File(filename);
+
+		context.setConfigLocation(file.toURI());
+
+		if (factory instanceof Log4jContextFactory)
+		{
+			// LOG.info("register shutdown hook");
+			Log4jContextFactory contextFactory = (Log4jContextFactory) factory;
+
+			((DefaultShutdownCallbackRegistry) contextFactory.getShutdownCallbackRegistry()).stop();
 		}
 
 	}

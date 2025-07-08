@@ -1,6 +1,8 @@
 Manifest-Version: 1.0
 Main-Class: com.tree.TreeDoc
-Class-Path: lib/commons-io-2.18.0.jar 
- lib/log4j-api-2.24.3.jar 
- lib/log4j-core-2.24.3.jar 
- lib/log4j-jcl-2.24.3.jar 
+Class-Path: lib/commons-io-2.19.0.jar 
+ lib/log4j-api-2.25.0.jar 
+ lib/log4j-core-2.25.0.jar 
+ lib/log4j-jcl-2.25.0.jar 
+ lib/log4j-slf4j2-impl-2.25.0.jar 
+ lib/slf4j-api-2.0.17.jar 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<info>
+    
+    <libraries>
+            	
+        <library>
+            <description>Apache Commons IO</description>
+            <version>2.19.0</version>
+            <type>Apache Licence 2.0</type>> 
+         </library>
+
+        <library>
+            <description>Apache Log4j</description>
+            <version>2.25.0</version>
+        	<type>Apache Licence 2.0</type>
+        </library>
+        
+         <library>
+            <description>SLF4J (The Simple Logging Facade for Java)</description>
+            <version>1.3.5</version>
+        	<type>MIT License</type>
+        </library>
+                                        
+    </libraries>
+
+    <licenses>
+    
+        <license>
+    		<type>MIT License</type>
+    		<filename>MIT License.txt</filename>
+    	</license>
+    
+    	<license>
+    		<type>GNU General Public License V2</type>
+    		<filename>GNU General Public License V2.txt</filename>
+    	</license>
+    
+        <license>
+            <type>Apache Licence 2.0</type>
+            <filename>Apache Licence Version 2.0.txt</filename>
+        </license>
+
+                
+    </licenses>
+
+</info>

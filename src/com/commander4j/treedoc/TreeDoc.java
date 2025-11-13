@@ -40,7 +40,6 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -80,7 +79,7 @@ public class TreeDoc extends JFrame
 	private final JTextArea outputArea = new JTextArea(40, 100);
 	public static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TreeDoc.class);
 	public static LoggerContextFactory factory = LogManager.getFactory();
-	public static String version = "2.00";
+	public static String version = "2.01";
 	private Dimension btn = new Dimension(32, 32);
 	private Dimension separator = new Dimension(10, 10);
 	private JUtility util = new JUtility();

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" name="MyApp">
+  
+  <Properties>
+    <Property name="LOG_DIR">./logs</Property>
+  </Properties>
+  
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT" ignoreExceptions="false">
+      <PatternLayout pattern="%d{DEFAULT} - %msg%n"/>
+    </Console>
+    
+    <RollingFile
+      name="rollingFile"
+      fileName="${LOG_DIR}/TreeDoc.log"
+      filePattern="${LOG_DIR}/TreeDoc-%d{yyyy-MM-dd}-%i.log.gz"
+      ignoreExceptions="false">
+      
+      <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+      </PatternLayout>
+      
+      <Policies>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      
+      <DefaultRolloverStrategy max="100">
+        <Delete basePath="${LOG_DIR}" maxDepth="1">
+          <IfFileName glob="TreeDoc-*.log.gz"/>
+          <IfLastModified age="P14D"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+  </Appenders>
+  
+  <Loggers>
+    <Root level="debug">
+      <AppenderRef ref="rollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Root>
+    
+    <Logger name="org.apache.http" level="debug">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    
+    <Logger name="org.apache.http.wire" level="debug">
+      <AppenderRef ref="Console"/>
+    </Logger>
+    
+    <Logger name="org.apache.http.impl.conn" level="debug">
+      <AppenderRef ref="Console"/>
+    </Logger>
+  </Loggers>
+  
+</Configuration>

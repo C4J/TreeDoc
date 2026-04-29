@@ -79,7 +79,7 @@ public class TreeDoc extends JFrame
 	private final JTextArea outputArea = new JTextArea(40, 100);
 	public static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TreeDoc.class);
 	public static LoggerContextFactory factory = LogManager.getFactory();
-	public static String version = "2.01";
+	public static String version = "2.10";
 	private Dimension btn = new Dimension(32, 32);
 	private Dimension separator = new Dimension(10, 10);
 	private JUtility util = new JUtility();
@@ -105,38 +105,38 @@ public class TreeDoc extends JFrame
 
 		JLabel4j_std lblStart = new JLabel4j_std("Base folder:");
 		top.add(lblStart);
-		
+
 		top.addSeparator(separator);
 
 		pathField.setSize(new Dimension(360, 24));
 		pathField.setMinimumSize(new Dimension(360, 24));
 		pathField.setPreferredSize(new Dimension(360, 24));
 		top.add(pathField);
-		
+
 		JButton4j browseBtn = new JButton4j();
 		browseBtn.setPreferredSize(btn);
 		browseBtn.setToolTipText("Select Folder");
 		top.add(browseBtn);
 		browseBtn.setIcon(Common.icon_select_folder);
-		
+
 		JButton4j refreshBtn = new JButton4j();
 		refreshBtn.setPreferredSize(btn);
 		refreshBtn.setToolTipText("Refresh");
 		top.add(refreshBtn);
 		refreshBtn.setIcon(Common.icon_reload);
 		refreshBtn.addActionListener(e -> generate());
-		
+
 		top.addSeparator(separator);
 
 		JLabel4j_std lblDepth = new JLabel4j_std("Max depth:");
 		top.add(lblDepth);
-		
+
 		top.addSeparator(separator);
 
 		depthSpinner.setPreferredSize(new Dimension(70, 24));
 		top.add(depthSpinner);
 		depthSpinner.revalidate();
-		
+
 		top.addSeparator(separator);
 		JLabel4j_std lblEntries = new JLabel4j_std("Max entries:");
 
@@ -146,12 +146,12 @@ public class TreeDoc extends JFrame
 		top.add(entriesSpinner);
 		entriesSpinner.setPreferredSize(new Dimension(70, 24));
 		entriesSpinner.revalidate();
-		
+
 		top.addSeparator(separator);
-		
+
 		includeFilesChk.setSelected(false);
 		top.add(includeFilesChk);
-		
+
 		outputArea.setForeground(new Color(255, 0, 0));
 
 		// ---------- Output area ----------
@@ -173,7 +173,7 @@ public class TreeDoc extends JFrame
 		right.setOrientation(SwingConstants.VERTICAL);
 		right.setAlignmentX(SwingConstants.VERTICAL);
 		getContentPane().add(right, BorderLayout.EAST);
-		
+
 		statusMessage.setFont(Common.font_bold);
 		statusMessage.setLocation(3, 6);
 		statusMessage.setForeground(new Color(0, 0, 255));
@@ -181,7 +181,7 @@ public class TreeDoc extends JFrame
 		statusMessage.setPreferredSize(new Dimension(800,27));
 		statusMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		statusBar.setFloatable(false);
-		
+
 		getContentPane().add(statusBar,BorderLayout.SOUTH);
 		statusBar.addSeparator(separator);
 		statusBar.add(statusMessage);
@@ -242,8 +242,8 @@ public class TreeDoc extends JFrame
 		clearBtn.setPreferredSize(btn);
 		right.add(clearBtn);
 		clearBtn.setIcon(Common.icon_erase);
-		
-		
+
+
 		JButton4j btnAbout = new JButton4j(Common.icon_about);
 		btnAbout.setToolTipText("About");
 		btnAbout.addActionListener(new ActionListener()
@@ -273,9 +273,9 @@ public class TreeDoc extends JFrame
 
 		final JHelp help = new JHelp();
 		help.enableHelpOnButton(btnHelp, "https://wiki.commander4j.com");
-		right.add(btnHelp);		
-		
-		
+		right.add(btnHelp);
+
+
 		JButton4j closeBtn = new JButton4j();
 		closeBtn.setToolTipText("Close");
 		right.add(closeBtn);
@@ -323,11 +323,11 @@ public class TreeDoc extends JFrame
 
 		setBounds(screenBounds.x + ((screenBounds.width - TreeDoc.this.getWidth()) / 2), screenBounds.y + ((screenBounds.height - TreeDoc.this.getHeight()) / 2), TreeDoc.this.getWidth() + widthadjustment,
 				TreeDoc.this.getHeight() + heightadjustment);
-		
+
 		//SwingUtilities.invokeLater(this::generate);
-		
+
 		setVisible(true);
-		
+
 
 	}
 
@@ -402,12 +402,12 @@ public class TreeDoc extends JFrame
 
 		outputArea.setText(sb.toString());
 		outputArea.setCaretPosition(0);
-		
+
 		String msg = "Entries Printed "+String.valueOf(counter.value);
-		
+
 		if (counter.value >= maxEntries)
 			msg = msg + " (truncated)";
-		
+
 		 statusMessage.setText(msg);
 	}
 

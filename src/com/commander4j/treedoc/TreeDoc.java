@@ -79,7 +79,7 @@ public class TreeDoc extends JFrame
 	private final JTextArea outputArea = new JTextArea(40, 100);
 	public static Logger logger = org.apache.logging.log4j.LogManager.getLogger(TreeDoc.class);
 	public static LoggerContextFactory factory = LogManager.getFactory();
-	public static String version = "2.10";
+	public static String version = "3.00";
 	private Dimension btn = new Dimension(32, 32);
 	private Dimension separator = new Dimension(10, 10);
 	private JUtility util = new JUtility();
@@ -124,7 +124,7 @@ public class TreeDoc extends JFrame
 		refreshBtn.setToolTipText("Refresh");
 		top.add(refreshBtn);
 		refreshBtn.setIcon(Common.icon_reload);
-		refreshBtn.addActionListener(e -> generate());
+		refreshBtn.addActionListener(_ -> generate());
 
 		top.addSeparator(separator);
 
@@ -235,7 +235,7 @@ public class TreeDoc extends JFrame
 		right.add(copyBtn);
 		copyBtn.setIcon(Common.icon_duplicate);
 
-		copyBtn.addActionListener(e -> copyToClipboard());
+		copyBtn.addActionListener(_ -> copyToClipboard());
 
 		JButton4j clearBtn = new JButton4j();
 		clearBtn.setToolTipText("Clear");
@@ -302,7 +302,7 @@ public class TreeDoc extends JFrame
 		});
 
 		// ---------- Actions ----------
-		browseBtn.addActionListener(e -> chooseFolder());
+		browseBtn.addActionListener(_ -> chooseFolder());
 		pack();
 		setMinimumSize(new Dimension(900, 650));
 
